@@ -8,6 +8,7 @@ import logger from 'morgan';
 import passport from 'passport';
 import sql from 'mssql';
 import cors from 'cors';
+import http from 'http';
 
 import sqlConfig from './config/database';
 import authStrategy from './auth/stategy';
@@ -28,6 +29,7 @@ sql.connect(sqlConfig(process.env.DB_HOST, process.env.DB_NAME,
         console.log("Conectado ao banco de dados " + process.env.DB_NAME);
 
         const app = express();
+        const server = http.Server(app);
 
         passport.use(authStrategy);
 
@@ -44,8 +46,8 @@ sql.connect(sqlConfig(process.env.DB_HOST, process.env.DB_NAME,
         app.use('/pc', pc);
         app.use('/api', api);
         app.use('/read', read);
-
-        app.listen(port, () => {
+        
+        server.listen(port, () => {
             console.log('API online! porta: ' + port);
         });
     });
