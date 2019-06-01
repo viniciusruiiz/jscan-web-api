@@ -1,5 +1,7 @@
 require('dotenv-safe').config();
 
+const port = process.env.PORT || 8080;
+
 import express from 'express';
 import bodyParser from 'body-parser';
 import logger from 'morgan';
@@ -43,7 +45,7 @@ sql.connect(sqlConfig(process.env.DB_HOST, process.env.DB_NAME,
         app.use('/api', api);
         app.use('/read', read);
 
-        app.listen(process.env.PORT, () => {
-            console.log('API online! porta: ' + process.env.PORT);
+        app.listen(port, () => {
+            console.log('API online! porta: ' + port);
         });
     });
