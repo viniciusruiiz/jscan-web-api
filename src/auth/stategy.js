@@ -1,8 +1,8 @@
-import { Strategy } from 'passport-jwt';
-import sql from 'mssql';
-import options from '../config/token'
+const passportJwt = require('passport-jwt');
 
-const strategy = new Strategy(options, (payload, done) => {
+const options = require('../config/token');
+
+const strategy = new passportJwt.Strategy(options, (payload, done) => {
     global.conn.request()
         .query(`SELECT idFuncionario FROM TB_FUNCIONARIO WHERE idFuncionario = '${payload.id}'`)
         .then(user => {
@@ -17,4 +17,4 @@ const strategy = new Strategy(options, (payload, done) => {
         });
 });
 
-export default strategy;
+module.exports = strategy;

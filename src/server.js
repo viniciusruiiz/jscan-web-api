@@ -1,24 +1,23 @@
 require('dotenv-safe').config();
-
 const port = process.env.PORT || 8080;
 
-import express from 'express';
-import bodyParser from 'body-parser';
-import logger from 'morgan';
-import passport from 'passport';
-import sql from 'mssql';
-import cors from 'cors';
-import http from 'http';
+const express = require('express');
+const bodyParser = require('body-parser');
+const logger = require('morgan');
+const passport = require('passport');
+const sql = require('mssql');
+const cors = require('cors');
+const http = require('http');
 
-import sqlConfig from './config/database';
-import authStrategy from './auth/stategy';
+const sqlConfig = require('./config/database');
+const authStrategy = require('./auth/stategy');
 
-import auth from './routes/auth';
-import users from './routes/users';
-import company from "./routes/company";
-import api from './routes/api';
-import pc from './routes/pc';
-import read from './routes/read';
+const auth = require('./routes/auth');
+const users = require('./routes/users');
+const company = require('./routes/company');
+const api = require('./routes/api');
+const pc = require('./routes/pc');
+const read = require('./routes/read');
 
 console.log("Ligando a api...")
 

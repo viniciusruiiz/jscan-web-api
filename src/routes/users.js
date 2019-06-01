@@ -1,8 +1,7 @@
-import express from 'express';
-import passport from 'passport';
-
-import hashCode from '../config/hash'
-import database from '../data/database';
+const express = require('express');
+const passport = require('passport');
+const database = require('../data/database');
+const hashCode = require('../config/hash');
 
 const router = express();
 
@@ -31,4 +30,4 @@ router.post('/add', passport.authenticate('jwt', { session: false }), (req, res)
     }
 });
 
-export default router;
+module.exports = router;

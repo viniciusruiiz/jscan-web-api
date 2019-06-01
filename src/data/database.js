@@ -1,10 +1,8 @@
-import sql from 'mssql'
-import sqlConfig from '../config/database'
-import envoriment from 'dotenv-safe'
+require('dotenv-safe').config();
+const sql = require('mssql');
+const sqlConfig = require('../config/database');
 
-envoriment.config();
-
-export default {
+module.exports = {
     queryFromRoute: (SqlQuery, res) => {
         global.conn.request()
             .query(SqlQuery)

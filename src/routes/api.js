@@ -1,7 +1,6 @@
-import express from 'express';
-import passport from 'passport';
-
-import database from '../data/database';
+const express = require('express');
+const passport = require('passport');
+const database = require('../data/database');
 
 const router = express();
 
@@ -36,4 +35,4 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
 
 });
 
-export default router;
+module.exports = router;

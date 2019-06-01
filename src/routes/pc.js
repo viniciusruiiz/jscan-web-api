@@ -1,7 +1,6 @@
-import express from 'express';
-import passport from 'passport';
-
-import database from '../data/database';
+const express = require('express');
+const passport = require('passport');
+const database = require('../data/database');
 
 const router = express();
 
@@ -13,4 +12,4 @@ router.get('/getByEmployer/:id', passport.authenticate('jwt', {session: false}),
     database.queryFromRoute(`SELECT * FROM TB_COMPUTADOR WHERE IDFUNCIONARIO = ${req.params.id}`, res);
 });
 
-export default router;
+module.exports = router;

@@ -1,7 +1,6 @@
-import express from 'express';
-import passport from 'passport';
-
-import database from '../data/database';
+const express = require('express');
+const passport = require('passport');
+const database = require('../data/database');
 
 const router = express();
 
@@ -47,4 +46,4 @@ router.get('/api/:id', passport.authenticate('jwt', {session: false}), (req, res
     database.queryFromRoute(`SELECT TOP(10) * FROM TB_LEITURA_API WHERE IDAPI = ${req.params.id} ORDER BY IDLEITURA DESC`, res);
 });
 
-export default router;
+module.exports = router;

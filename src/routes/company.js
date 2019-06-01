@@ -1,11 +1,11 @@
-import express from 'express';
-import database from '../data/database';
-import hashCode from '../config/hash'
-
+const express = require('express');
+const passport = require('passport');
+const database = require('../data/database');
+const hashCode = require('../config/hash');
 
 const router = express.Router();
 
-router.post('/add', (req, res) => {
+router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) => {
 
     if (req.body.nomeEmpresa && req.body.cnpj && req.body.nomeFuncionario && req.body.email && req.body.senha && req.body.phone) {
 
@@ -23,7 +23,7 @@ router.post('/add', (req, res) => {
     }
 });
 
-router.get('/get/:id', (req, res) => {
+router.get('/get/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
     console.log(req.params)
     if (req.params.id) {
     let id = req.params.id;
@@ -36,4 +36,4 @@ router.get('/get/:id', (req, res) => {
     }
 });
 
-export default router;
+module.exports = router;

@@ -1,8 +1,7 @@
-import express from 'express';
-import jwt from 'jsonwebtoken';
-import mssql from 'mssql'
-import options from '../config/token'
-import hashCode from '../config/hash'
+const express = require('express');
+const jwt = require('jsonwebtoken');
+const options = require('../config/token');
+const hashCode = require('../config/hash');
 
 const router = express.Router();
 
@@ -94,4 +93,4 @@ router.post('/', (req, res) => {
 
 });
 
-export default router;
+module.exports = router;

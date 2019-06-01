@@ -15,7 +15,7 @@
  * @return {number} um hashcode respectivo a string passada no parâmetro da função
  */
 
-export default (stringToConvert) => {
+module.exports = (stringToConvert) => {
     for(var index = 0, hash = 0; index < stringToConvert.length; index++)
         hash = Math.imul(31, hash) + stringToConvert.charCodeAt(index) | 0;
     return hash;
