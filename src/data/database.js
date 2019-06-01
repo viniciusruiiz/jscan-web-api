@@ -1,4 +1,4 @@
-require('dotenv-safe').config();
+// require('dotenv-safe').config();
 const sql = require('mssql');
 const sqlConfig = require('../config/database');
 
@@ -15,10 +15,10 @@ module.exports = {
     },
     CreateCompany: (nomeEmpresa, cnpj, nomeFuncionario, email, senha, telefone, res) => {
 
-        let connection = new sql.ConnectionPool(sqlConfig(process.env.DB_HOST,
-            process.env.DB_NAME,
-            process.env.DB_USER,
-            process.env.DB_PASSWORD));
+        let connection = new sql.ConnectionPool(sqlConfig("jscanserver.database.windows.net",
+            "jscandb",
+            "adm_jscan",
+            "Y33bkxs9@"));
 
         connection.connect().then(conn => {
             let request = new sql.Request(conn)
@@ -38,10 +38,10 @@ module.exports = {
     },
     CreateEmployer: (idEmpresa, idGestor, nome, email, senha, telefone, tipo, res) => {
 
-        let connection = new sql.ConnectionPool(sqlConfig(process.env.DB_HOST,
-            process.env.DB_NAME,
-            process.env.DB_USER,
-            process.env.DB_PASSWORD));
+        let connection = new sql.ConnectionPool(sqlConfig("jscanserver.database.windows.net",
+            "jscandb",
+            "adm_jscan",
+            "Y33bkxs9@"));
 
         connection.connect().then(conn => {
             let request = new sql.Request(conn)
@@ -63,10 +63,10 @@ module.exports = {
     },
     CreateApi: (idGestor, nome, tipo, descricao, endPoint, res) => {
 
-        let connection = new sql.ConnectionPool(sqlConfig(process.env.DB_HOST,
-            process.env.DB_NAME,
-            process.env.DB_USER,
-            process.env.DB_PASSWORD));
+        let connection = new sql.ConnectionPool(sqlConfig("jscanserver.database.windows.net",
+            "jscandb",
+            "adm_jscan",
+            "Y33bkxs9@"));
 
         connection.connect().then(conn => {
             let request = new sql.Request(conn)

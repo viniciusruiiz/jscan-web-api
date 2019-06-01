@@ -1,4 +1,4 @@
-require('dotenv-safe').config();
+// require('dotenv-safe').config();
 const port = process.env.PORT || 8080;
 
 const express = require('express');
@@ -21,11 +21,11 @@ const read = require('./routes/read');
 
 console.log("Ligando a api...")
 
-sql.connect(sqlConfig(process.env.DB_HOST, process.env.DB_NAME, 
-    process.env.DB_USER, process.env.DB_PASSWORD))
+sql.connect(sqlConfig("jscanserver.database.windows.net", "jscandb", 
+"adm_jscan", "Y33bkxs9@"))
     .then((connection) => {
         global.conn = connection;
-        console.log("Conectado ao banco de dados " + process.env.DB_NAME);
+        console.log("Conectado ao banco de dados " +"jscandb");
 
         const app = express();
         const server = http.Server(app);
