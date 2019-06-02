@@ -11,7 +11,7 @@ router.get('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
 router.get('/list/:idGst', passport.authenticate('jwt', {session: false}), (req, res) => {
     database.queryFromRoute(`
 SELECT A.idapi
-,      A.nmapi
+,      A.nmApi
 ,      A.idtipoapi
 ,      A.nmEndPoint
 ,      (SELECT TOP 1 L.ATIVO
