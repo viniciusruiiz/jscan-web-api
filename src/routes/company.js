@@ -24,7 +24,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
 });
 
 router.get('/get/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-    console.log(req.params)
+
     if (req.params.id) {
     let id = req.params.id;
 
@@ -32,8 +32,17 @@ router.get('/get/:id', passport.authenticate('jwt', {session: false}), (req, res
             idempresa = ${id} and idtipo != 3`, res)
 
     } else {
-        res.json({ "message": 'Erro ao retornar funcionarios!!' })
+        res.json({ "message": 'Erro ao retornar funcionarios!' })
     }
+});
+
+router.get('/manager/list/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+    database.queryFromRoute(`
+    SELECT *
+      FROM TB_FUNCIONARIO
+     WHERE IDTIPO = 2
+       AND IDEMPRESA = ${req.params.id}`)
 });
 
 module.exports = router;
