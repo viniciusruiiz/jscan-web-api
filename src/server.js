@@ -1,5 +1,4 @@
-// require('dotenv-safe').config();
-const port = process.env.PORT || "8080";
+const port = process.env.PORT || "3000";
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -7,7 +6,6 @@ const logger = require('morgan');
 const passport = require('passport');
 const sql = require('mssql');
 const cors = require('cors');
-//const http = require('http');
 
 const sqlConfig = require('./config/database');
 const authStrategy = require('./auth/stategy');
@@ -28,7 +26,6 @@ sql.connect(sqlConfig("jscanserver.database.windows.net", "jscandb",
         console.log("Conectado ao banco de dados " +"jscandb");
 
         const app = express();
-        //const server = http.Server(app);
 
         passport.use(authStrategy);
 
@@ -45,12 +42,8 @@ sql.connect(sqlConfig("jscanserver.database.windows.net", "jscandb",
         app.use('/pc', pc);
         app.use('/api', api);
         app.use('/read', read);
-        
-        //server.listen(port, () => {
-        //    console.log('API online! porta: ' + port);
-        //});
 
         app.listen(port, () => {
-            console.log("teste sem http")
+            console.log('API online! porta: ' + port);
         })
     });
