@@ -61,7 +61,7 @@ LEFT JOIN TB_COMPUTADOR  C
                                         titulo: "Lista de Funcionarios"
                                     },
                                     {
-                                        path: 'cadastro-funcionario',
+                                        path: 'empresa/cadastro-funcionario',
                                         titulo: "Cadastrar Funcionario"
                                     },
                                 ]

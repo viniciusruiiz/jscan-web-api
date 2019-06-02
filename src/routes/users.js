@@ -15,7 +15,6 @@ router.get('/get/:id', passport.authenticate('jwt', { session: false }), (req, r
 
 router.post('/add', passport.authenticate('jwt', { session: false }), (req, res) => {
 
-    //criação de desenvolvedor passando tipo e idGestor
     if (req.body.idEmpresa && req.body.nomeFuncionario && 
         req.body.email && req.body.senha &&
         req.body.phone && req.body.type) {
