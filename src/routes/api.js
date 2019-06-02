@@ -9,15 +9,19 @@ router.get('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
 });
 
 router.get('/list/:idGst', passport.authenticate('jwt', {session: false}), (req, res) => {
-    database.queryFromRoute(`select top 1 a.idapi, a.dsapi, a.nmApi, a.idtipoapi, a.idfuncionario, l.ativo from tb_api a 
-                            inner join tb_leitura_api l 
-                            on a.idapi = l.idapi
-                            INNER JOIN TB_API_FUNCIONARIO FUN_API
-                            ON a.IDAPI = FUN_API.IDAPI
-                            INNER JOIN TB_FUNCIONARIO F
-                            ON F.idFuncionario = FUN_API.idFuncionario
-                            WHERE F.IDGESTOR = ${req.params.idGst}
-                            order by l.idleitura desc`, res);
+    database.queryFromRoute(`
+SELECT A.idapi
+,      A.nmapi
+,      A.idtipoapi
+,      A.nmEndPoint
+,      (SELECT TOP 1 L.ATIVO
+        FROM TB_LEITURA_API L
+        WHERE L.IDAPI = A.IDAPI
+        ORDER BY L.IDLEITURA DESC) ativo
+  FROM TB_API A
+,      TB_API_FUNCIONARIO AF
+ WHERE AF.IDAPI = A.IDAPI
+   AND AF.IDFUNCIONARIO = '${req.params.idGst}'`, res);
 });
 
 router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) => {
