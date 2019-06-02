@@ -73,8 +73,8 @@ module.exports = {
             request.input('IDGESTOR', idGestor)
             request.input('NMAPI', nome)
             request.input('DSAPI', descricao)
-            request.input('TIPAPI', tipo)
-            request.input('NMENDPOINT', endPoint)
+            request.input('TPAPI', tipo)
+            request.input('ENDPOINT', endPoint)
             request.execute('CAD_API')
                 .then(result => {
                     res.json(result.recordset)

@@ -30,4 +30,10 @@ router.post('/add', passport.authenticate('jwt', { session: false }), (req, res)
     }
 });
 
+router.post('/delete/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+
+    database.queryFromRoute(`DELETE FROM TB_FUNCIONARIO
+    WHERE IDFUNCIONARIO = ${req.params.id}`)
+});
+
 module.exports = router;

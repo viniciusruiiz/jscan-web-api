@@ -13,7 +13,9 @@ router.post('/', (req, res) => {
         var email = req.body.email, senha = req.body.senha;
         //buscar o usuário no banco
         global.conn.request()
-            .query(`SELECT * FROM TB_FUNCIONARIO WHERE NMEMAIL = '${email}'`)
+            .query(`SELECT * FROM TB_FUNCIONARIO F
+            INNER JOIN TB_COMPUTADOR C ON C.IDFUNCIONARIO = F.IDFUNCIONARIO
+            WHERE F.NMEMAIL = '${email}'`)
             .then(user => {
                 //verifica se trouxe alguma coisa
                 if (user.recordset.length > 0) {
