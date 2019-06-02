@@ -83,5 +83,25 @@ module.exports = {
         }).catch(err => {
             console.error(err)
         })
+    },
+    DeleteApi: (idApi,idGestor,  res) => {
+
+        let connection = new sql.ConnectionPool(sqlConfig("jscanserver.database.windows.net",
+            "jscandb",
+            "adm_jscan",
+            "Y33bkxs9@"));
+
+        connection.connect().then(conn => {
+            let request = new sql.Request(conn)
+            request.input('IDAPI', idApi)
+            request.input('IDGST', idGestor)
+            request.execute('DEL_API')
+                .then(result => {
+                    res.json(result.recordset)
+                    connection.close();
+                })
+        }).catch(err => {
+            console.error(err)
+        })
     }
 }

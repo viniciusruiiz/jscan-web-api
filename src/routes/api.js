@@ -34,4 +34,8 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
     }
 });
 
+router.post('/delete/:idGestor/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+    database.DeleteApi(req.params.id, req.params.idGestor);
+});
+
 module.exports = router;
