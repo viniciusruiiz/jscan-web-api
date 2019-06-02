@@ -99,13 +99,10 @@ router.get('/api/numberTimesDown/:id', passport.authenticate('jwt', { session: f
     global.conn.request()
         .query(_sqlStatementApiPercentage(apiId, undefined, undefined))
         .then(result => {
-
-            // console.log(result)
-
             result.recordset.forEach( result => {
-                console.log(result)
+
                 if(!result.active){
-                    console.log('entrou aqui')
+
                     numberTimesDown = downIndication ? numberTimesDown : numberTimesDown + 1
                     downIndication = true;
                 }
