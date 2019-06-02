@@ -29,16 +29,12 @@ LEFT JOIN TB_COMPUTADOR  C
                         let token = jwt.sign(payload, options.secretOrKey);
                         user.recordset[0].token = token;
                         user.recordset[0].message = "Autenticado com Sucesso!";
-                        switch (user.recordset[0].idTipo) {
+                        switch (user.recordset[0].IDTIPO) {
                             case 1:
                                 user.recordset[0].menu = [
                                     {
                                         path: 'gestor/',
                                         titulo: "Index"
-                                    },
-                                    {
-                                        path: 'cadastro-funcionario',
-                                        titulo: "Cadastrar Funcionario"
                                     },
                                     {
                                         path: 'gestor/cadastro-api',
@@ -51,7 +47,11 @@ LEFT JOIN TB_COMPUTADOR  C
                                     {
                                         path: 'dev/',
                                         titulo: "Index"
-                                    }
+                                    },
+                                    {
+                                        path: 'dev/lista-api',
+                                        titulo: "Index"
+                                    },
                                 ]
                                 break;
                             case 3:
@@ -63,10 +63,6 @@ LEFT JOIN TB_COMPUTADOR  C
                                     {
                                         path: 'cadastro-funcionario',
                                         titulo: "Cadastrar Funcionario"
-                                    },
-                                    {
-                                        path: 'empresa/',
-                                        titulo: "Index"
                                     },
                                 ]
                                 break;
