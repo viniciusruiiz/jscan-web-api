@@ -84,7 +84,7 @@ module.exports = {
             console.error(err)
         })
     },
-    DeleteApi: (idApi,idGestor,  res) => {
+    DeleteApi: (idApi, idGestor, res) => {
 
         let connection = new sql.ConnectionPool(sqlConfig("jscanserver.database.windows.net",
             "jscandb",

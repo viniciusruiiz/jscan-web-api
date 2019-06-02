@@ -28,7 +28,8 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
                 req.body.name,
                 req.body.type,
                 !!req.body.description ? req.body.description : null, //valida se a algo no campo da descrição, que é um campo não obrigatório
-                req.body.endPoint,);
+                req.body.endPoint,
+                res);
     } else {
         res.json({ "message": "Por favor, insira todos os campos obrigarórios!" })
     }
