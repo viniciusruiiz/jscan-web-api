@@ -41,8 +41,8 @@ router.get('/manager/list/:id', passport.authenticate('jwt', {session: false}), 
     database.queryFromRoute(`
     SELECT *
       FROM TB_FUNCIONARIO
-     WHERE IDTIPO = 2
-       AND IDEMPRESA = ${req.params.id}`)
+     WHERE IDTIPO = 1
+       AND IDEMPRESA = ${req.params.id}`, res)
 });
 
 module.exports = router;
