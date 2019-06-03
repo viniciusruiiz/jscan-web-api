@@ -5,7 +5,7 @@ const hashCode = require('../config/hash');
 
 const router = express.Router();
 
-router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/add', (req, res) => {
 
     if (req.body.nomeEmpresa && req.body.cnpj && req.body.nomeFuncionario && req.body.email && req.body.senha && req.body.phone) {
 

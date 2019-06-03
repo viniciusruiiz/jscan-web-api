@@ -61,7 +61,7 @@ router.get('/api/percentageTimeUp/:id', passport.authenticate('jwt', { session: 
 
                     let percentageUp = timeUp * 100 / (timeUp + timeDown);
 
-                    res.json({ 'percentageUp': parseFloat(percentageUp.toFixed(2)) });
+                    res.json({ 'percentageUp': parseFloat(percentageUp.toFixed(2)), 'success': true });
                 })
         })
         .catch(err => console.error(err));
@@ -74,7 +74,7 @@ router.get('/api/timeUp/:id', passport.authenticate('jwt', { session: false }), 
         .query(_sqlStatementApiPercentage(apiId, true, 1))
         .then(result => {
 
-            res.json({ 'timeUp': parseInt(result.recordset[0].timeReturned) })
+            res.json({ 'timeUp': parseInt(result.recordset[0].timeReturned), 'success': true })
         })
         .catch(err => console.error(err));
 });
@@ -86,7 +86,7 @@ router.get('/api/timeDowm/:id', passport.authenticate('jwt', { session: false })
         .query(_sqlStatementApiPercentage(apiId, false, 1))
         .then(result => {
 
-            res.json({ 'timeDown': parseInt(result.recordset[0].timeReturned) })
+            res.json({ 'timeDown': parseInt(result.recordset[0].timeReturned), 'success': true })
         })
         .catch(err => console.error(err));
 });
@@ -99,9 +99,9 @@ router.get('/api/numberTimesDown/:id', passport.authenticate('jwt', { session: f
     global.conn.request()
         .query(_sqlStatementApiPercentage(apiId, undefined, undefined))
         .then(result => {
-            result.recordset.forEach( result => {
+            result.recordset.forEach(result => {
 
-                if(!result.active){
+                if (!result.active) {
 
                     numberTimesDown = downIndication ? numberTimesDown : numberTimesDown + 1
                     downIndication = true;
@@ -109,10 +109,10 @@ router.get('/api/numberTimesDown/:id', passport.authenticate('jwt', { session: f
                 else {
                     downIndication = false;
                 }
-                    
+
             })
 
-            res.json({ 'numberTimesDown': numberTimesDown })
+            res.json({ 'numberTimesDown': numberTimesDown, 'success': true })
         })
         .catch(err => console.error(err));
 });

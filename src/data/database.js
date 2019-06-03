@@ -8,6 +8,7 @@ module.exports = {
             .query(SqlQuery)
             .then(result => {
                 console.log(result.recordset)
+                result.recordset.success = true;
                 res.json(result.recordset)
             }).catch(err => {
                 console.error(err)
