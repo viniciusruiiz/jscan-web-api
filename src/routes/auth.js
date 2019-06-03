@@ -50,7 +50,7 @@ LEFT JOIN TB_COMPUTADOR  C
                                     },
                                     {
                                         path: 'dev/lista-api',
-                                        titulo: "Index"
+                                        titulo: "Lista API's"
                                     },
                                 ]
                                 break;
