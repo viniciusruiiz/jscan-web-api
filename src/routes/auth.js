@@ -10,22 +10,22 @@ router.post('/', (req, res) => {
         var email = req.body.email, senha = req.body.senha;
         global.conn.request()
             .query(`
-   SELECT F.IDFUNCIONARIO
-,         F.NMFUNCIONARIO
-,         F.NMEMAIL
-,         F.NMSENHA
-,         F.IDEMPRESA
-,         F.IDGESTOR
-,         F.IDTIPO
-,         C.IDCOMPUTADOR
+   SELECT F.IDFUNCIONARIO AS id
+,         F.NMFUNCIONARIO AS name
+,         F.NMSENHA AS password
+,         F.IDEMPRESA AS idCompany
+,         F.IDGESTOR AS idManager
+,         F.IDTIPO AS type
+,         C.IDCOMPUTADOR AS idPc
      FROM TB_FUNCIONARIO F
 LEFT JOIN TB_COMPUTADOR  C
        ON F.IDFUNCIONARIO = C.IDFUNCIONARIO
     WHERE F.NMEMAIL = '${email}'`)
             .then(user => {
                 if (user.recordset.length > 0) {
-                    if (user.recordset[0].NMSENHA == hashCode(senha)) {
-                        let payload = { id: user.recordset[0].IDFUNCIONARIO };
+                    console.log(senha)
+                    if (user.recordset[0].password == hashCode(senha)) {
+                        let payload = { id: user.recordset[0].id };
                         let token = jwt.sign(payload, options.secretOrKey);
                         user.recordset[0].token = token;
                         user.recordset[0].message = "Autenticado com Sucesso!";

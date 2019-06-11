@@ -10,14 +10,13 @@ router.get('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
 
 router.get('/list/:idGst', passport.authenticate('jwt', {session: false}), (req, res) => {
     database.queryFromRoute(`
-SELECT A.idapi
-,      A.nmApi
-,      A.idtipoapi
-,      A.nmEndPoint
+SELECT A.idapi as id
+,      A.nmApi as name
+,      A.nmEndPoint as endPoint
 ,      (SELECT TOP 1 L.ATIVO
         FROM TB_LEITURA_API L
         WHERE L.IDAPI = A.IDAPI
-        ORDER BY L.IDLEITURA DESC) ativo
+        ORDER BY L.IDLEITURA DESC) as status
   FROM TB_API A
 ,      TB_API_FUNCIONARIO AF
  WHERE AF.IDAPI = A.IDAPI
