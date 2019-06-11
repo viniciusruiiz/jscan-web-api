@@ -25,13 +25,7 @@ router.get('/pc/processnumber/:id', passport.authenticate('jwt', { session: fals
 });
 
 router.get('/pc/uptime/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-    database.queryFromRoute(`SELECT TOP(10) tpAtividade as upTime FROM TB_LEITURA_PC WHERE IDCOMPUTADOR = ${req.params.id} ORDER BY IDLEITURA DESC`, res);
-});
-
-router.get('/pc/totalDiskRam/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-    database.queryFromRoute(`select top 1 vlmemoriaram, vlarmazenamento 
-    from tb_computador
-        where idcomputador =  ${req.params.id}`, res);
+    database.queryFromRoute(`SELECT TOP 1 tpAtividade as upTime FROM TB_LEITURA_PC WHERE IDCOMPUTADOR = ${req.params.id} ORDER BY IDLEITURA DESC`, res);
 });
 
 router.get('/pc/diskreadavarage/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -42,18 +36,27 @@ router.get('/pc/availableStorage/:id', passport.authenticate('jwt', { session: f
     let pcId = req.params.id;
 
     global.conn.request()
-        .query(`SELECT TOP 1 DATA.vlleituraarmazenamento , PC.vlarmazenamento
+        .query(`SELECT TOP 1 round((DATA.vlleituraarmazenamento / 1048576 / 1024), 2) as vlleituraarmazenamento, PC.vlarmazenamento
                 FROM TB_COMPUTADOR       PC
                 INNER JOIN TB_LEITURA_PC DATA 
                 ON PC.IDCOMPUTADOR = DATA.IDCOMPUTADOR
                 WHERE PC.IDCOMPUTADOR = ${pcId}
                 ORDER BY DATA.IDLEITURA DESC`)
         .then(result => {
-            let total = parseFloat(result.recordset[0].vlMemoriaRam);
-            let available = parseFloat(result.recordset[0].vlLeituraMemoria);
+
+            console.log(result.recordset)
+
+            let total = Math.round(result.recordset[0].vlarmazenamento);
+            let available = Math.round(result.recordset[0].vlleituraarmazenamento);
             let percentageAvailable = (available * 100) / total;
 
-            res.json({ "percentageAvailableStorage": parseFloat(percentageAvailable.toFixed(2)) })
+            console.log(percentageAvailable);
+
+            res.json({
+                "percentageAvailableStorage": parseFloat(percentageAvailable.toFixed(2)),
+                "available": available,
+                "total": total,
+            })
         })
 });
 
@@ -62,7 +65,7 @@ router.get('/pc/memoryPercentageAvailable/:id', passport.authenticate('jwt', { s
     let retVal = [];
 
     global.conn.request()
-        .query(`SELECT TOP 7 DATA.vlLeituraMemoria, PC.vlMemoriaRam, CONVERT(VARCHAR(11), DATA.dtregistro,108) as readDate
+        .query(`SELECT TOP 7 round((DATA.vlLeituraMemoria / 1048576), 2) as vlLeituraMemoria, PC.vlMemoriaRam, CONVERT(VARCHAR(11), DATA.dtregistro,108) as readDate
                 FROM TB_COMPUTADOR       PC
                 INNER JOIN TB_LEITURA_PC DATA 
                 ON PC.IDCOMPUTADOR = DATA.IDCOMPUTADOR
@@ -70,13 +73,13 @@ router.get('/pc/memoryPercentageAvailable/:id', passport.authenticate('jwt', { s
                 ORDER BY DATA.IDLEITURA DESC`)
         .then(result => {
 
-            result.recordset.length.forEach(line => {
+            result.recordset.forEach(line => {
                 let total = parseFloat(line.vlMemoriaRam);
                 let available = parseFloat(line.vlLeituraMemoria);
                 let percentageAvailable = (available * 100) / total;
 
                 retVal.push({
-                    "storagePercentageAvailable": parseFloat(percentageAvailable.toFixed(2)),
+                    "percentageMemoryAvailable": parseFloat(percentageAvailable.toFixed(2)),
                     "readDate": line.readDate
                 })
             })
