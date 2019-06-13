@@ -5,7 +5,11 @@ const database = require('../data/database');
 const router = express();
 
 router.get('/pc/cpu/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-    database.queryFromRoute(`SELECT TOP(7) vlLeituraCpu AS percentageCpu, CONVERT(VARCHAR(11), dtregistro,108) as readDate FROM TB_LEITURA_PC WHERE IDCOMPUTADOR = ${req.params.id} ORDER BY IDLEITURA DESC`, res);
+    database.queryFromRoute(`SELECT TOP(7) vlLeituraCpu AS percentageCpu, CONVERT(VARCHAR(8), dtregistro,108) as readDate FROM TB_LEITURA_PC WHERE IDCOMPUTADOR = ${req.params.id} ORDER BY IDLEITURA DESC`, res);
+});
+
+router.get('/pc/lastReadTime/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+    database.queryFromRoute(`SELECT TOP(1) CONVERT(VARCHAR(8), dtregistro,108) as readDate FROM TB_LEITURA_PC WHERE IDCOMPUTADOR = ${req.params.id} ORDER BY IDLEITURA DESC`, res);
 });
 
 router.get('/pc/ram/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -29,7 +33,7 @@ router.get('/pc/uptime/:id', passport.authenticate('jwt', { session: false }), (
 });
 
 router.get('/pc/diskreadavarage/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-    database.queryFromRoute(`SELECT TOP(7) mdLeituraDisco as diskReadAvarage, CONVERT(VARCHAR(11), dtregistro,108) as readDate FROM TB_LEITURA_PC WHERE IDCOMPUTADOR = ${req.params.id} ORDER BY IDLEITURA DESC`, res);
+    database.queryFromRoute(`SELECT TOP(7) mdLeituraDisco as diskReadAvarage, CONVERT(VARCHAR(8), dtregistro,108) as readDate FROM TB_LEITURA_PC WHERE IDCOMPUTADOR = ${req.params.id} ORDER BY IDLEITURA DESC`, res);
 });
 
 router.get('/pc/availableStorage/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -65,7 +69,7 @@ router.get('/pc/memoryPercentageAvailable/:id', passport.authenticate('jwt', { s
     let retVal = [];
 
     global.conn.request()
-        .query(`SELECT TOP 7 round((DATA.vlLeituraMemoria / 1048576), 2) as vlLeituraMemoria, PC.vlMemoriaRam, CONVERT(VARCHAR(11), DATA.dtregistro,108) as readDate
+        .query(`SELECT TOP 7 round((DATA.vlLeituraMemoria / 1048576), 2) as vlLeituraMemoria, PC.vlMemoriaRam, CONVERT(VARCHAR(8), DATA.dtregistro,108) as readDate
                 FROM TB_COMPUTADOR       PC
                 INNER JOIN TB_LEITURA_PC DATA 
                 ON PC.IDCOMPUTADOR = DATA.IDCOMPUTADOR
@@ -98,18 +102,23 @@ router.get('/api/percentageTimeUp/:id', passport.authenticate('jwt', { session: 
         .query(_sqlStatementApiPercentage(apiId, true, 1))
         .then(result => {
 
-            timeUp = parseInt(result.recordset[0].timeReturned);
+            timeUp = result.recordset[0] ? parseInt(result.recordset[0].timeReturned) : 0;
 
             global.conn.request()
                 .query(_sqlStatementApiPercentage(apiId, false, 1))
                 .then(result => {
 
-                    timeDown = parseInt(result.recordset[0].timeReturned);
+                    timeDown = result.recordset[0] ? parseInt(result.recordset[0].timeReturned) : 0;
 
                     let percentageUp = timeUp * 100 / (timeUp + timeDown);
 
-                    res.json({ 'percentageUp': parseFloat(percentageUp.toFixed(2)), 'success': true });
-                })
+                    res.json({
+                        'percentageUp': parseFloat(percentageUp.toFixed(2)),
+                        'timeUp': timeUp,
+                        'timeDown': timeDown,
+                        'success': true,
+                    });
+                }).catch(err => console.error(err));
         })
         .catch(err => console.error(err));
 });
@@ -158,6 +167,8 @@ router.get('/api/numberTimesDown/:id', passport.authenticate('jwt', { session: f
                 }
 
             })
+
+            console.log(numberTimesDown)
 
             res.json({ 'numberTimesDown': numberTimesDown, 'success': true })
         })

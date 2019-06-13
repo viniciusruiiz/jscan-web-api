@@ -104,5 +104,24 @@ module.exports = {
         }).catch(err => {
             console.error(err)
         })
+    },
+    DeleteUser: (idUser, res) => {
+
+        let connection = new sql.ConnectionPool(sqlConfig("jscanserver.database.windows.net",
+            "jscandb",
+            "adm_jscan",
+            "Y33bkxs9@"));
+
+        connection.connect().then(conn => {
+            let request = new sql.Request(conn)
+            request.input('IDUSER', idUser)
+            request.execute('DEL_USER')
+                .then(result => {
+                    res.json(result.recordset)
+                    connection.close();
+                })
+        }).catch(err => {
+            console.error(err)
+        })
     }
 }
