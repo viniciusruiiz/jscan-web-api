@@ -5,7 +5,7 @@ const database = require('../data/database');
 const router = express();
 
 router.get('/pc/cpu/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-    database.queryFromRoute(`SELECT TOP(7) vlLeituraCpu AS percentageCpu, CONVERT(VARCHAR(8), dtregistro,108) as readDate FROM TB_LEITURA_PC WHERE IDCOMPUTADOR = ${req.params.id} ORDER BY IDLEITURA DESC`, res);
+    database.queryFromRoute(`SELECT TOP(7) round(vlLeituraCpu, 2) AS percentageCpu, CONVERT(VARCHAR(8), dtregistro,108) as readDate FROM TB_LEITURA_PC WHERE IDCOMPUTADOR = ${req.params.id} ORDER BY IDLEITURA DESC`, res);
 });
 
 router.get('/pc/lastReadTime/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -152,15 +152,18 @@ router.get('/api/numberTimesDown/:id', passport.authenticate('jwt', { session: f
     let numberTimesDown = 0;
     let downIndication = false;
 
+    console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+
     global.conn.request()
-        .query(_sqlStatementApiPercentage(apiId, undefined, undefined))
+        .query(_sqlStatementNumberTimesDown(apiId, 1, -30))
         .then(result => {
             result.recordset.forEach(result => {
 
                 if (!result.active) {
-
-                    numberTimesDown = downIndication ? numberTimesDown : numberTimesDown + 1
-                    downIndication = true;
+                    if (!downIndication) {
+                        numberTimesDown += 1
+                        downIndication = true;
+                    }
                 }
                 else {
                     downIndication = false;
@@ -168,7 +171,86 @@ router.get('/api/numberTimesDown/:id', passport.authenticate('jwt', { session: f
 
             })
 
-            console.log(numberTimesDown)
+            res.json({ 'numberTimesDown': numberTimesDown, 'success': true })
+        })
+        .catch(err => console.error(err));
+});
+
+router.get('/api/numberTimesDownLastMonth/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+    let apiId = req.params.id;
+    let numberTimesDown = 0;
+    let downIndication = false;
+
+    global.conn.request()
+        .query(_sqlStatementNumberTimesDown(apiId, -31, -60))
+        .then(result => {
+            result.recordset.forEach(result => {
+
+                if (!result.active) {
+                    if (!downIndication) {
+                        numberTimesDown += 1
+                        downIndication = true;
+                    }
+                }
+                else {
+                    downIndication = false;
+                }
+
+            })
+
+            res.json({ 'numberTimesDown': numberTimesDown, 'success': true })
+        })
+        .catch(err => console.error(err));
+});
+
+router.get('/api/numberTimesDownLastMonth2/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+    let apiId = req.params.id;
+    let numberTimesDown = 0;
+    let downIndication = false;
+
+    global.conn.request()
+        .query(_sqlStatementNumberTimesDown(apiId, -61, -90))
+        .then(result => {
+            result.recordset.forEach(result => {
+
+                if (!result.active) {
+                    if (!downIndication) {
+                        numberTimesDown += 1
+                        downIndication = true;
+                    }
+                }
+                else {
+                    downIndication = false;
+                }
+
+            })
+
+            res.json({ 'numberTimesDown': numberTimesDown, 'success': true })
+        })
+        .catch(err => console.error(err));
+});
+
+router.get('/api/numberTimesDownLastMonth3/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+    let apiId = req.params.id;
+    let numberTimesDown = 0;
+    let downIndication = false;
+
+    global.conn.request()
+        .query(_sqlStatementNumberTimesDown(apiId, -91, -120))
+        .then(result => {
+            result.recordset.forEach(result => {
+
+                if (!result.active) {
+                    if (!downIndication) {
+                        numberTimesDown += 1
+                        downIndication = true;
+                    }
+                }
+                else {
+                    downIndication = false;
+                }
+
+            })
 
             res.json({ 'numberTimesDown': numberTimesDown, 'success': true })
         })
@@ -182,10 +264,23 @@ function _sqlStatementApiPercentage(apiId, isActive, rowCount) {
 SELECT   ${rowCount == undefined || rowCount == 0 ? '' : `TOP ${rowCount}`} RANK () OVER (ORDER BY IDLEITURA) AS timeReturned
 ,        ATIVO AS active
 FROM     TB_LEITURA_API 
-WHERE    DTREGISTRO > DATEADD(d, DATEDIFF(d, 0, GETDATE()), -30)
-AND      IDAPI = ${apiId}
+WHERE    IDAPI = ${apiId}
 ${isActive == undefined ? '' : (isActive ? `AND ATIVO = 'True'` : `AND ATIVO = 'False'`)}
 ORDER BY IDLEITURA DESC`
+}
+
+function _sqlStatementNumberTimesDown(apiId, minDate, maxDate) {
+    var query =  `
+  SELECT RANK () OVER (ORDER BY IDLEITURA) AS timeReturned
+,        ATIVO AS active
+    FROM TB_LEITURA_API
+   WHERE IDAPI=${apiId}
+     AND DTREGISTRO between DATEADD(d, DATEDIFF(d, 0, GETDATE()), ${maxDate}) and  DATEADD(d, DATEDIFF(d, 0, GETDATE()), ${minDate})
+ORDER BY IDLEITURA DESC`
+
+console.log(query)
+
+return query;
 }
 
 //#endregion
