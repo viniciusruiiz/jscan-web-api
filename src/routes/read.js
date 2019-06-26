@@ -13,13 +13,13 @@ router.get('/pc/lastReadTime/:id', passport.authenticate('jwt', { session: false
 });
 
 router.get('/pc/ram/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-    database.queryFromRoute(`select top(10) round((vlLeituraMemoria / 1048576), 2)
-         as vlLeituraMemoria  FROM TB_LEITURA_PC WHERE IDCOMPUTADOR = ${req.params.id} ORDER BY IDLEITURA DESC`, res);
+    database.queryFromRoute(`select top(10) vlLeituraMemoria
+        FROM TB_LEITURA_PC WHERE IDCOMPUTADOR = ${req.params.id} ORDER BY IDLEITURA DESC`, res);
 });
 
 router.get('/pc/disk/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
     database.queryFromRoute(`select top 1 
-        round((vlleituraarmazenamento / 1073741824‬), 2) as vlleituraarmazenamento 
+        vlleituraarmazenamento 
             from tb_leitura_pc WHERE IDCOMPUTADOR = ${req.params.id} 
                 ORDER BY IDLEITURA DESC`, res);
 });
